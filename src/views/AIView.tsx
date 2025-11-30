@@ -203,7 +203,7 @@ const AIView: React.FC = () => {
                                         : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
                                 }`}>
                                     <p className="whitespace-pre-wrap leading-relaxed text-sm">
-                                        {message.content}
+                                        {message.content?.replace(/\\n/g, '\n')}
                                     </p>
                                 </div>
                                 <span className={`text-[10px] text-slate-500 mt-1 block ${message.role === 'user' ? 'text-right' : ''}`}>

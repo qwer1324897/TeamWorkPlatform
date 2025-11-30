@@ -173,7 +173,7 @@ const QnaView: React.FC = () => {
                                 <span>{selectedQna.date}</span>
                             </div>
                             <div className="bg-gray-50 p-5 rounded-xl border border-gray-100">
-                                <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{selectedQna.content}</p>
+                                <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{selectedQna.content?.replace(/\\n/g, '\n')}</p>
                             </div>
                         </div>
 
@@ -186,7 +186,7 @@ const QnaView: React.FC = () => {
                                         <span className="font-bold">관리자</span>
                                         <CheckCircle size={14} className="text-green-500" />
                                     </div>
-                                    <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{selectedQna.answer}</p>
+                                    <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{selectedQna.answer?.replace(/\\n/g, '\n')}</p>
                                 </div>
                             ) : (
                                 <div className="bg-yellow-50 p-5 rounded-xl border border-yellow-100 text-center">

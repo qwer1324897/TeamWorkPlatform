@@ -246,7 +246,7 @@ const NoticeView: React.FC = () => {
                     {/* 본문 */}
                     <div className="flex-1 p-8 overflow-y-auto">
                         <p className="text-slate-700 leading-relaxed whitespace-pre-wrap text-base font-normal">
-                            {selectedNotice.content}
+                            {selectedNotice.content?.replace(/\\n/g, '\n')}
                         </p>
                     </div>
 

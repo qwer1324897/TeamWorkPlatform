@@ -514,8 +514,8 @@ const TodoView: React.FC = () => {
                                             className="w-full p-4 rounded-xl border border-blue-300 focus:ring-2 focus:ring-blue-500 outline-none min-h-[120px] resize-none"
                                         />
                                     ) : (
-                                        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-sm text-slate-700 leading-relaxed min-h-[120px] shadow-inner">
-                                            {selectedTodo.description || '설명이 없습니다.'}
+                                        <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-sm text-slate-700 leading-relaxed min-h-[120px] shadow-inner whitespace-pre-wrap">
+                                            {selectedTodo.description?.replace(/\\n/g, '\n') || '설명이 없습니다.'}
                                         </div>
                                     )}
                                 </div>
