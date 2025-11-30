@@ -52,9 +52,9 @@ export interface NoticeItem {
 export interface QnaItem {
   id: number;
   category: string;
-  type: string;
-  status: '접수' | '처리중' | '답변완료';
-  isSecret: boolean;
+  type?: string;  // optional로 변경
+  status: '접수' | '처리중' | '답변완료' | '대기중';  // '대기중' 추가
+  isSecret?: boolean;  // optional로 변경
   title: string;
   content: string;
   answer?: string;
@@ -91,13 +91,14 @@ export interface MeetingRoomItem {
   name: string;
   capacity: number;
   location: string;
-  equipment: string[]; // facilities 대체
-  status: string; // isAvailable 대체
-  currentMeeting: any; // 구체적인 타입 정의 필요 시 수정
-  nextMeeting: any; // 구체적인 타입 정의 필요 시 수정
-  reservations: string[]; // 예약된 시간대 목록
+  equipment?: string[]; // facilities 대체 (optional)
+  status?: string; // isAvailable 대체 (optional)
+  currentMeeting?: any; // 구체적인 타입 정의 필요 시 수정 (optional)
+  nextMeeting?: any; // 구체적인 타입 정의 필요 시 수정 (optional)
+  reservations?: string[]; // 예약된 시간대 목록 (optional)
   facilities?: string[]; // 하위 호환성
   isAvailable?: boolean; // 하위 호환성
+  nextAvailableTime?: string; // 다음 예약 가능 시간
 }
 
 export interface ContactItem {

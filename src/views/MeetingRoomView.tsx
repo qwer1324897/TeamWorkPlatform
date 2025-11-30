@@ -93,11 +93,11 @@ const MeetingRoomView: React.FC = () => {
                            </span>
                        </div>
 
-                       <div className="flex flex-wrap gap-2 mb-6 relative z-10">
-                           {room.facilities.map(fac => (
-                               <span key={fac} className="text-xs bg-gray-100 text-slate-600 px-2.5 py-1 rounded-md border border-gray-200 font-medium group-hover:bg-white transition-colors">{fac}</span>
-                           ))}
-                       </div>
+                      <div className="flex flex-wrap gap-2 mb-6 relative z-10">
+                          {(room.facilities || []).map(fac => (
+                              <span key={fac} className="text-xs bg-gray-100 text-slate-600 px-2.5 py-1 rounded-md border border-gray-200 font-medium group-hover:bg-white transition-colors">{fac}</span>
+                          ))}
+                      </div>
 
                        <div className="relative z-10">
                            <div className="flex justify-between text-xs text-slate-400 mb-1.5 font-medium px-0.5">
@@ -140,16 +140,16 @@ const MeetingRoomView: React.FC = () => {
                    
                    <div className="p-8 overflow-y-auto">
                        <div className="grid grid-cols-2 gap-8 mb-8">
-                           <div>
-                               <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">보유 장비</h4>
-                               <div className="flex flex-wrap gap-2">
-                                   {selectedRoom.facilities.map(fac => (
-                                       <span key={fac} className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-bold border border-blue-100 flex items-center gap-1">
-                                           <CheckCircle2 size={12} /> {fac}
-                                       </span>
-                                   ))}
-                               </div>
-                           </div>
+                          <div>
+                              <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">보유 장비</h4>
+                              <div className="flex flex-wrap gap-2">
+                                  {(selectedRoom.facilities || []).map(fac => (
+                                      <span key={fac} className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-bold border border-blue-100 flex items-center gap-1">
+                                          <CheckCircle2 size={12} /> {fac}
+                                      </span>
+                                  ))}
+                              </div>
+                          </div>
                            <div>
                                <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">예약 현황 (오늘)</h4>
                                <div className="w-full h-10 bg-gray-100 rounded-lg flex overflow-hidden ring-1 ring-gray-200 relative">
