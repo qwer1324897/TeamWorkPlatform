@@ -1,0 +1,5 @@
+{
+  "name": "비즈니스 업무 협업 플랫폼 서비스 킥오프",
+  "description": "Java EE 백엔드 기반의 차세대 업무 협업 포털 프론트엔드 프로토타입. 메일, 일정, 할 일, 게시판, AI 비서 기능을 포함합니다.",
+  "requestFramePermissions": []
+}
