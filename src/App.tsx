@@ -13,6 +13,7 @@ import DriveView from './views/DriveView';
 import NoticeView from './views/NoticeView';
 import QnaView from './views/QnaView';
 import AIView from './views/AIView';
+import KanbanView from './views/KanbanView';
 import LoginView from './views/LoginView';
 import { ViewState, User } from './types';
 import { Session } from '@supabase/supabase-js';
@@ -132,6 +133,8 @@ function App() {
         return <QnaView />;
       case ViewState.AI:
         return <AIView />;
+      case ViewState.KANBAN:
+        return <KanbanView />;
       default:
         return <MainDashboard user={user.name} onNavigate={setCurrentView} />;
     }

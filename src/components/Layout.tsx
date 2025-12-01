@@ -4,7 +4,7 @@ import {
   Mail, Calendar, CheckSquare, HardDrive,
   Bell, MessageCircleQuestion, Bot, StickyNote,
   MapPin, Contact, Video, Layers, Search, LogOut, 
-  ChevronDown, Home, Menu, X, Sparkles, Clock, FileText, Check
+  ChevronDown, Home, Menu, X, Sparkles, Clock, FileText, Check, Kanban
 } from 'lucide-react';
 
 /**
@@ -39,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onNavigate, user
 
   const navItems = [
     { id: ViewState.MAIN, label: '홈', icon: Home },
+    { id: ViewState.KANBAN, label: '칸반', icon: Kanban },
     { id: ViewState.MAIL, label: '메일', icon: Mail, badge: 3 },
     { id: ViewState.CALENDAR, label: '일정', icon: Calendar },
     { id: ViewState.TODO, label: '할 일', icon: CheckSquare, badge: 5 },
@@ -212,7 +213,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onNavigate, user
       {/* ========================================
           메인 콘텐츠 영역
       ======================================== */}
-      <div className="flex-1 flex flex-col lg:ml-20 relative z-10">
+      <div className="flex-1 flex flex-col lg:ml-20 relative z-10 min-w-0 overflow-hidden">
         
         {/* Top App Bar - 프로필 완전 우측 */}
         <header className="h-16 bg-white/70 backdrop-blur-xl border-b border-white/50 flex items-center px-4 lg:px-6 sticky top-0 z-30 shadow-sm">
@@ -355,7 +356,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onNavigate, user
         </header>
 
         {/* 메인 콘텐츠 */}
-        <main className="flex-1 p-4 lg:p-6 animate-fade-in">
+        <main className="flex-1 p-4 lg:p-6 animate-fade-in min-w-0 overflow-x-auto">
           {children}
         </main>
 

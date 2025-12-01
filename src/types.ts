@@ -12,7 +12,8 @@ export enum ViewState {
   DRIVE = 'DRIVE',
   NOTICE = 'NOTICE',
   QNA = 'QNA',
-  AI = 'AI'
+  AI = 'AI',
+  KANBAN = 'KANBAN'
 }
 
 export interface User {
@@ -135,4 +136,68 @@ export interface CalendarEvent {
   endDate: Date;
   type: 'personal' | 'team' | 'company';
   color: string;
+}
+
+// ========================================
+// 칸반 보드 관련 타입
+// ========================================
+
+export interface Project {
+  id: number;
+  name: string;
+  description?: string;
+  status: 'active' | 'completed' | 'archived';
+  color: string;
+  createdAt?: string;
+}
+
+export interface KanbanColumn {
+  id: number;
+  projectId: number;
+  name: string;
+  color: string;
+  position: number;
+  tasks?: KanbanTask[];
+}
+
+export interface KanbanTask {
+  id: number;
+  columnId: number;
+  title: string;
+  description?: string;
+  assigneeId?: number;
+  assignee?: ContactItem;
+  dueDate?: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  position: number;
+  tags?: string[];
+  checklist?: ChecklistItem[];
+  createdAt?: string;
+}
+
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+export interface TaskComment {
+  id: number;
+  taskId: number;
+  authorId: number;
+  author?: ContactItem;
+  content: string;
+  createdAt: string;
+}
+
+export interface ActivityLog {
+  id: number;
+  userId?: number;
+  user?: ContactItem;
+  actionType: string;
+  targetType: string;
+  targetId?: number;
+  description: string;
+  metadata?: Record<string, any>;
+  createdAt: string;
 }
