@@ -101,32 +101,21 @@ const Layout: React.FC<LayoutProps> = ({ children, currentView, onNavigate, user
           화려한 배경 디자인
       ======================================== */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* 메인 그라데이션 배경 */}
-        <div className="absolute inset-0" 
-             style={{ 
-               background: 'linear-gradient(135deg, #f0f4ff 0%, #faf5ff 25%, #fff1f2 50%, #f0fdfa 75%, #fffbeb 100%)'
-             }} />
+        {/* 메인 그라데이션 배경 - 깔끔한 Slate/White 톤 */}
+        <div className="absolute inset-0 bg-slate-50" />
         
-        {/* 애니메이션 블롭들 */}
-        <div className="absolute top-[-20%] right-[-10%] w-[700px] h-[700px] rounded-full opacity-40 animate-blob"
-             style={{ background: 'radial-gradient(circle, #93c5fd 0%, transparent 70%)' }} />
-        <div className="absolute top-[30%] left-[-15%] w-[600px] h-[600px] rounded-full opacity-30 animate-blob animation-delay-2000"
-             style={{ background: 'radial-gradient(circle, #c4b5fd 0%, transparent 70%)' }} />
-        <div className="absolute bottom-[-20%] right-[20%] w-[800px] h-[800px] rounded-full opacity-35 animate-blob animation-delay-4000"
-             style={{ background: 'radial-gradient(circle, #fda4af 0%, transparent 70%)' }} />
-        <div className="absolute bottom-[10%] left-[30%] w-[500px] h-[500px] rounded-full opacity-25 animate-blob animation-delay-3000"
-             style={{ background: 'radial-gradient(circle, #86efac 0%, transparent 70%)' }} />
+        {/* 은은한 오로라 효과 (파스텔톤) */}
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"
+             style={{ background: '#bfdbfe' }} /> {/* blue-200 */}
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"
+             style={{ background: '#e9d5ff' }} /> {/* purple-200 */}
+        <div className="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"
+             style={{ background: '#c7d2fe' }} /> {/* indigo-200 */}
         
-        {/* 플로팅 도형들 */}
-        <div className="absolute top-[15%] right-[25%] w-20 h-20 border-2 border-blue-200 rounded-2xl rotate-12 opacity-40 animate-float" />
-        <div className="absolute top-[45%] left-[10%] w-16 h-16 border-2 border-purple-200 rounded-full opacity-30 animate-float animation-delay-1000" />
-        <div className="absolute bottom-[25%] right-[15%] w-24 h-24 border-2 border-pink-200 rounded-3xl -rotate-12 opacity-35 animate-float animation-delay-2000" />
-        <div className="absolute top-[70%] left-[25%] w-12 h-12 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl rotate-45 opacity-50 animate-float animation-delay-3000" />
-        
-        {/* 그리드 패턴 */}
+        {/* 그리드 패턴 - 아주 연하게 */}
         <div className="absolute inset-0 opacity-[0.015]"
              style={{
-               backgroundImage: 'linear-gradient(#2563eb 1px, transparent 1px), linear-gradient(90deg, #2563eb 1px, transparent 1px)',
+               backgroundImage: 'linear-gradient(#64748b 1px, transparent 1px), linear-gradient(90deg, #64748b 1px, transparent 1px)',
                backgroundSize: '40px 40px'
              }} />
       </div>

@@ -186,18 +186,18 @@ const CalendarView: React.FC = () => {
     };
 
     /**
-     * 달력 날짜 배열 생성
+     * 달력 날짜 배열 생성 (항상 5주/35일 유지)
      */
     const generateCalendarDays = () => {
         const monthStart = startOfMonth(currentDate);
         const monthEnd = endOfMonth(monthStart);
         const startDate = startOfWeek(monthStart);
-        const endDate = endOfWeek(monthEnd);
-
+        
         const days = [];
         let day = startDate;
 
-        while (day <= endDate) {
+        // 화면 꽉 채우기를 위해 항상 5주(35일) 렌더링
+        for (let i = 0; i < 35; i++) {
             days.push({
                 day: format(day, 'd'),
                 currentMonth: isSameMonth(day, monthStart),
@@ -328,9 +328,9 @@ const CalendarView: React.FC = () => {
             {/* ========================================
                 메인 캘린더 영역
             ======================================== */}
-            <div className="flex-1 flex flex-col bg-white">
+            <div className="flex-1 flex flex-col bg-white px-8 pb-2">
                 {/* 헤더 */}
-                <div className="h-16 border-b border-gray-200 flex items-center justify-between px-6">
+                <div className="h-16 flex items-center justify-between mb-2">
                     <div className="flex items-center gap-4">
                         <h2 className="text-xl font-bold text-slate-800">{year}년 {currentMonthName}</h2>
                         <div className="flex gap-2">
@@ -363,61 +363,67 @@ const CalendarView: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 요일 헤더 */}
-                <div className="grid grid-cols-7 border-b border-gray-200">
-                    {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
-                        <div key={day} className={`py-3 text-center text-sm font-bold ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-slate-600'}`}>
-                            {day}
-                        </div>
-                    ))}
-                </div>
-
-                {/* 달력 그리드 */}
-                <div className="flex-1 grid grid-cols-7 grid-rows-6 overflow-hidden">
-                    {loading ? (
-                        <div className="col-span-7 row-span-6 flex items-center justify-center">
-                            <Loader2 className="animate-spin text-blue-500" size={48} />
-                        </div>
-                    ) : calendarDays.map((dateObj, idx) => {
-                        // 해당 날짜의 일정 (필터링 적용)
-                        const dayEvents = filteredEvents.filter(e => isSameDay(e.startDate, dateObj.date));
-                        const isToday = isSameDay(dateObj.date, new Date());
-
-                        return (
-                            <div
-                                key={idx}
-                                onClick={() => handleDateClick(dateObj.date)}
-                                className={`border-b border-r border-gray-100 p-1 relative hover:bg-blue-50/30 transition-colors min-h-[100px] flex flex-col gap-1 overflow-hidden cursor-pointer
-                                    ${!dateObj.currentMonth ? 'bg-gray-50/30' : ''}
-                                `}
-                            >
-                                {/* 날짜 숫자 */}
-                                <span className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full ml-1 mt-1
-                                    ${!dateObj.currentMonth ? 'text-gray-300' : (idx % 7 === 0 ? 'text-red-500' : idx % 7 === 6 ? 'text-blue-500' : 'text-slate-700')}
-                                    ${isToday ? 'bg-blue-600 text-white shadow-md' : ''}
-                                `}>
-                                    {dateObj.day}
-                                </span>
-
-                                {/* 일정 목록 */}
-                                <div className="flex-1 flex flex-col gap-1 overflow-y-auto no-scrollbar">
-                                    {dayEvents.slice(0, 3).map(evt => (
-                                        <div
-                                            key={evt.id}
-                                            onClick={(e) => { e.stopPropagation(); setSelectedEvent(evt); }}
-                                            className={`text-[11px] px-1.5 py-0.5 rounded truncate cursor-pointer shadow-sm hover:shadow-md transition-all hover:scale-[1.02] ${evt.color}`}
-                                        >
-                                            {evt.type !== 'personal' && <span className="font-bold mr-1">{format(evt.startDate, 'HH:mm')}</span>}
-                                            {evt.title}
-                                        </div>
-                                    ))}
-                                    {dayEvents.length > 3 && (
-                                        <span className="text-[10px] text-slate-400 px-1">+{dayEvents.length - 3}개 더</span>
-                                    )}
-                                </div>
+                {/* 달력 컨테이너 (테두리 및 둥근 모서리 적용) */}
+                <div className="flex-1 flex flex-col border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                    {/* 요일 헤더 */}
+                    <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50/50">
+                        {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
+                            <div key={day} className={`py-3 text-center text-sm font-bold ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-slate-600'}`}>
+                                {day}
                             </div>
-                        );
-                    })}
+                        ))}
+                    </div>
+
+                    {/* 달력 그리드 */}
+                    <div className="flex-1 grid grid-cols-7 grid-rows-5 overflow-hidden bg-white">
+                        {loading ? (
+                            <div className="col-span-7 row-span-5 flex items-center justify-center">
+                                <Loader2 className="animate-spin text-blue-500" size={48} />
+                            </div>
+                        ) : calendarDays.map((dateObj, idx) => {
+                            // 해당 날짜의 일정 (필터링 적용)
+                            const dayEvents = filteredEvents.filter(e => isSameDay(e.startDate, dateObj.date));
+                            const isToday = isSameDay(dateObj.date, new Date());
+                            const isSelected = isSameDay(dateObj.date, currentDate);
+
+                            return (
+                                <div
+                                    key={idx}
+                                    onClick={() => { handleDateClick(dateObj.date); setCurrentDate(dateObj.date); }}
+                                    className={`border-b border-r border-gray-100 p-1 relative transition-colors h-full flex flex-col gap-1 overflow-hidden cursor-pointer
+                                        ${!dateObj.currentMonth ? 'bg-gray-50/30' : 'hover:bg-blue-50'}
+                                        ${isSelected && !isToday ? 'bg-blue-50/50' : ''}
+                                    `}
+                                >
+                                    {/* 날짜 숫자 */}
+                                    <span className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full ml-1 mt-1 transition-all
+                                        ${!dateObj.currentMonth ? 'text-gray-300' : (idx % 7 === 0 ? 'text-red-500' : idx % 7 === 6 ? 'text-blue-500' : 'text-slate-700')}
+                                        ${isToday ? 'bg-blue-600 text-white shadow-md' : ''}
+                                        ${isSelected && !isToday ? 'ring-2 ring-blue-400 text-blue-700' : ''}
+                                    `}>
+                                        {dateObj.day}
+                                    </span>
+
+                                    {/* 일정 목록 */}
+                                    <div className="flex-1 flex flex-col gap-1 overflow-y-auto no-scrollbar">
+                                        {dayEvents.slice(0, 3).map(evt => (
+                                            <div
+                                                key={evt.id}
+                                                onClick={(e) => { e.stopPropagation(); setSelectedEvent(evt); }}
+                                                className={`text-[11px] px-1.5 py-0.5 rounded truncate cursor-pointer shadow-sm hover:shadow-md transition-all hover:scale-[1.02] ${evt.color}`}
+                                            >
+                                                {evt.type !== 'personal' && <span className="font-bold mr-1">{format(evt.startDate, 'HH:mm')}</span>}
+                                                {evt.title}
+                                            </div>
+                                        ))}
+                                        {dayEvents.length > 3 && (
+                                            <span className="text-[10px] text-slate-400 px-1">+{dayEvents.length - 3}개 더</span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 

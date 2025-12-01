@@ -64,11 +64,26 @@ export const mailService = {
             tag: mail.tag,
             isImportant: mail.is_important,
             hasAttachment: mail.has_attachment,
-            isVip: mail.is_vip,
+            isVip: false, // 기본적으로 false로 설정하고, 나중에 contact 정보와 조인해서 업데이트
             isMentioned: mail.is_mentioned
         })) || [];
 
         return { data: mails, error };
+    },
+
+    /**
+     * 안 읽은 메일 개수 가져오기 (받은 메일함 기준)
+     * 
+     * @returns 안 읽은 메일 개수와 에러 객체
+     */
+    async getUnreadCount() {
+        const { count, error } = await supabase
+            .from('mails')
+            .select('*', { count: 'exact', head: true })
+            .eq('folder', 'inbox')
+            .eq('is_read', false);
+            
+        return { count, error };
     },
 
     /**
@@ -99,7 +114,7 @@ export const mailService = {
                 tag: data.tag,
                 isImportant: data.is_important,
                 hasAttachment: data.has_attachment,
-                isVip: data.is_vip,
+                isVip: false, // 상세 조회에서도 기본 false
                 isMentioned: data.is_mentioned
             };
         }

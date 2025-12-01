@@ -24,9 +24,16 @@ const MailView: React.FC = () => {
     const [composeContent, setComposeContent] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [quickReplyContent, setQuickReplyContent] = useState('');
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    const fetchUnreadCount = async () => {
+        const { count, error } = await mailService.getUnreadCount();
+        if (!error && count !== null) setUnreadCount(count);
+    };
 
     const fetchMails = async () => {
         setIsLoading(true);
+        fetchUnreadCount(); // 메일 목록 가져올 때 안 읽은 메일 개수도 갱신
         if (currentFolder === 'draft' || currentFolder === 'spam') {
             setMails([]);
             setIsLoading(false);
@@ -35,8 +42,21 @@ const MailView: React.FC = () => {
         let folderToFetch: 'inbox' | 'sent' | 'trash' | 'important' = 'inbox';
         if (currentFolder === 'sent') folderToFetch = 'sent';
         else if (currentFolder === 'trash') folderToFetch = 'trash';
-        const { data, error } = await mailService.getMails(folderToFetch);
-        if (!error) setMails(data || []);
+        
+        const { data: mailsData, error: mailError } = await mailService.getMails(folderToFetch);
+        const { data: contactsData, error: contactError } = await contactService.getContacts();
+
+        if (!mailError && mailsData) {
+            // 연락처 정보와 매핑하여 VIP 상태 업데이트
+            const mergedMails = mailsData.map(mail => {
+                const contact = contactsData?.find(c => c.name === mail.sender || c.email === mail.senderEmail);
+                return {
+                    ...mail,
+                    isVip: contact ? contact.isVip : false
+                };
+            });
+            setMails(mergedMails);
+        }
         setIsLoading(false);
     };
 
@@ -45,7 +65,7 @@ const MailView: React.FC = () => {
         if (!error && data) setContacts(data);
     };
 
-    useEffect(() => { fetchContacts(); }, []);
+    useEffect(() => { fetchContacts(); fetchUnreadCount(); }, []);
     useEffect(() => { fetchMails(); }, [currentFolder]);
 
     const handleRecipientSearch = (value: string) => {
@@ -98,6 +118,7 @@ const MailView: React.FC = () => {
         if (!error) {
             setMails(mails.map(m => m.id === mail.id ? { ...m, isRead: !m.isRead } : m));
             if (selectedMail?.id === mail.id) setSelectedMail({ ...selectedMail, isRead: !mail.isRead });
+            fetchUnreadCount(); // 읽음 상태 변경 시 카운트 갱신
         }
     };
 
@@ -150,8 +171,6 @@ const MailView: React.FC = () => {
         });
     }, [mails, searchTerm]);
 
-    const unreadCount = mails.filter(m => !m.isRead && m.folder === 'inbox').length;
-
     const getFolderName = (folder: string) => {
         const names: Record<string, string> = { inbox: '받은 메일함', sent: '보낸 메일함', draft: '임시 보관함', spam: '스팸 메일함', trash: '휴지통' };
         return names[folder] || folder;
@@ -188,12 +207,12 @@ const MailView: React.FC = () => {
                         <button 
                             key={item.id}
                             onClick={() => { setCurrentFolder(item.id); setSelectedMail(null); }} 
-                            className={`list-item w-full mb-1 ${currentFolder === item.id ? 'active' : ''}`}
+                            className={`list-item w-full mb-1 flex items-center gap-3 px-4 py-3 ${currentFolder === item.id ? 'active' : ''}`}
                         >
-                            <item.icon size={20} />
-                            <span className="flex-1 text-left">{item.label}</span>
-                            {item.count && item.count > 0 && (
-                                <span className="badge">{item.count}</span>
+                            <item.icon size={20} className="shrink-0" />
+                            <span className="flex-1 text-left text-sm">{item.label}</span>
+                            {item.id === 'inbox' && unreadCount > 0 && (
+                                <span className="badge ml-auto">{unreadCount}</span>
                             )}
                         </button>
                     ))}
@@ -204,11 +223,11 @@ const MailView: React.FC = () => {
                         태그
                     </p>
                     {['업무', '공지', '프로젝트', '개인'].map(tag => (
-                        <button key={tag} className="list-item w-full mb-1">
-                            <span className={`w-3 h-3 rounded-full ${
+                        <button key={tag} className="list-item w-full mb-1 flex items-center gap-3 px-4 py-2">
+                            <span className={`w-3 h-3 rounded-full shrink-0 ${
                                 tag === '업무' ? 'bg-blue-500' : tag === '공지' ? 'bg-red-500' : tag === '프로젝트' ? 'bg-green-500' : 'bg-gray-400'
                             }`} />
-                            <span className="flex-1 text-left">{tag}</span>
+                            <span className="flex-1 text-left text-sm">{tag}</span>
                         </button>
                     ))}
                 </nav>
